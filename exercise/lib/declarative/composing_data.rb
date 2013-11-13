@@ -1,36 +1,39 @@
 class Student
-  attr_reader :assignments, :name
-
   def initialize(name)
     @name = name
-    @assignments = []
+    @score={}
   end
 
-  def assign(course, grade)
-    assignments << Assignment.new(course, grade)
+  def assign(subject, score)
+    @score[subject.name.downcase] = score
   end
-end
 
-class Assignment
-  def initialize(course, grade)
-    @course = course
-    @grade = grade
+  def subject_score(subject)
+    @score[subject.name.downcase]
+  end
+
+  def query_score_by_subject_name(subject_name)
+    @score[subject_name.downcase]
+  end
+
+  def total_score
+    @score.values.reduce(:+)
   end
 end
 
 class Course
-  attr_reader :grade
-  def initialize grade
-    @grade = grade
+  attr_reader :name
+  def initialize(subject)
+    @name = subject
   end
 end
 
 class Calculator
   def total_average(students)
-    0
+    students.reduce(0) { |a, e| a + e.total_score } / students.count
   end
 
-  def course_average(students, course)
-    0
+  def course_average(students, subject_name)
+    students.reduce(0) { |a, e| a + e.query_score_by_subject_name(subject_name.downcase) } / students.count
   end
 end
